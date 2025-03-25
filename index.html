@@ -80,7 +80,6 @@
   <button id="submitMessage">Send</button>
   <p id="responseMessage"></p>
 </div>
-
 <script>
   document
     .getElementById("submitMessage")
@@ -94,52 +93,35 @@
         return;
       }
 
-    //   fetch(
-    //     "https://script.google.com/macros/s/AKfycbwruEelo4X-Io9JL-qtktTtA_e48-wBEJwr7YdqPXlaLVIMmV2arh3jKiVPMnQNrQFf/exec",
-    //     {
-    //       method: "POST",
-    //       mode: "cors",
-    //       redirect: "follow",
-    //       body: JSON.stringify({ name: name, message: message }),
-    //       headers: { "Content-Type": "application/json" },
-    //     }
-    //   )
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       responseMessage.textContent = "Thank you for your message!";
-    //       document.getElementById("guestName").value = "";
-    //       document.getElementById("guestMessage").value = "";
-    //     });
-    //   // .catch((error) => {
-    //   //   console.error("Error:", error);
-    //   //   responseMessage.textContent =
-    //   //     "Something went wrong. Check console for details.";
-    //   // });
-    // });
+      console.log("Attempting to send fetch request...");
 
-  fetch(
-    "https://script.google.com/macros/s/AKfycbwruEelo4X-Io9JL-qtktTtA_e48-wBEJwr7YdqPXlaLVIMmV2arh3jKiVPMnQNrQFf/exec",
-    {
-      method: "POST",
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "Guest", message: "Congratulations!" }),
-    }
-  )
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then((data) => {
-      console.log("Success:", data);
-      document.getElementById("responseMessage").textContent =
-        "Thank you for your message!";
-    })
-    .catch((error) => {
-      console.error("Fetch error:", error);
-      document.getElementById("responseMessage").textContent =
-        "Something went wrong. Check console.";
+      fetch(
+        "https://script.google.com/macros/s/AKfycbwruEelo4X-Io9JL-qtktTtA_e48-wBEJwr7YdqPXlaLVIMmV2arh3jKiVPMnQNrQFf/exec",
+        {
+          method: "POST",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: name, message: message }),
+        }
+      )
+        .then((res) => {
+          console.log("Response received:", res);
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Success:", data);
+          responseMessage.textContent = "Thank you for your message!";
+          document.getElementById("guestName").value = "";
+          document.getElementById("guestMessage").value = "";
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+          responseMessage.textContent = "Something went wrong. Check console.";
+        });
+
+      console.log("Fetch request sent.");
     });
 </script>
