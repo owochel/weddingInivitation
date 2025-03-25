@@ -122,12 +122,15 @@
       //       responseMessage.textContent = "Something went wrong. Check console.";
       //     });
 
-      fetch("YOUR_NEW_WEB_APP_URL", {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: "Guest", message: "Congratulations!" }),
-      })
+      fetch(
+        "https://script.google.com/macros/s/AKfycbwruEelo4X-Io9JL-qtktTtA_e48-wBEJwr7YdqPXlaLVIMmV2arh3jKiVPMnQNrQFf/exec",
+        {
+          method: "POST",
+          mode: "cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: "Guest", message: "Congratulations!" }),
+        }
+      )
         .then((res) => {
           console.log("Response received:", res);
           if (!res.ok) {
