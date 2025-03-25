@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wedding Invitation - LinkedIn Style</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="linkedin-logo">
+        <!-- Linked
+        <span
+          style="
+            color: white;
+            background: red;
+            padding: 2px 5px;
+            border-radius: 50%;
+            font-size: 12px;
+          "
+        >
+          2
+        </span> -->
+        <img class="linkedin-logo" src="logo.png" alt="logo" />
+      </div>
+      <p>You are invited to witness</p>
+      <a href="https://www.linkedin.com/in/shuang-cai/">
+        <img src="shuang.jpeg" alt="Couple Photo" class="profile-pic" />
+      </a>
+      <a href=" https://www.linkedin.com/in/jeffyanchen/">
+        <img src="yan.jpeg" alt="Couple Photo" class="profile-pic" />
+      </a>
+      <h2>Shuang Cai & Yan Chen</h2>
+      <p>Future Life Partners</p>
+      <div class="button-container">
+        <button class="button" id="rsvpButton">Accept</button>
+        <button class="outline-button" id="sayCongrats">Say Congrats</button>
+      </div>
+      <div class="people-you-may-know">
+        <h3>More people you may know</h3>
+        <div class="person">
+          <img src="guest1.jpg" alt="Guest 1" />
+          <div>
+            <p><strong>Melika Panbehchi</strong></p>
+            <p>Bridesmaid</p>
+          </div>
+          <button class="view-button">View Profile</button>
+        </div>
+        <div class="person">
+          <img src="guest2.jpg" alt="Guest 2" />
+          <div>
+            <p><strong>Baiyuan Xing</strong></p>
+            <p>Groomsman</p>
+          </div>
+          <button class="view-button">View Profile</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("rsvpButton")
+        .addEventListener("click", function () {
+          window.location.href =
+            "https://calendar.app.google/s8HZxK6FWjHnq3ZE6";
+        });
+      document
+        .getElementById("sayCongrats")
+        .addEventListener("click", function () {
+          alert("Profile details coming soon!");
+        });
+    </script>
+  </body>
+</html>
+
+<div class="message-container">
+  <h3>Leave a Message</h3>
+  <input type="text" id="guestName" placeholder="Your Name" required />
+  <textarea id="guestMessage" placeholder="Your Message" required></textarea>
+  <button id="submitMessage">Send</button>
+  <p id="responseMessage"></p>
+</div>
+
+<script>
+  document
+    .getElementById("submitMessage")
+    .addEventListener("click", function () {
+      const name = document.getElementById("guestName").value;
+      const message = document.getElementById("guestMessage").value;
+      const responseMessage = document.getElementById("responseMessage");
+
+      if (name === "" || message === "") {
+        responseMessage.textContent = "Please fill in both fields.";
+        return;
+      }
+
+      fetch(
+        "https://script.google.com/macros/s/AKfycbwruEelo4X-Io9JL-qtktTtA_e48-wBEJwr7YdqPXlaLVIMmV2arh3jKiVPMnQNrQFf/exec",
+        {
+          method: "POST",
+          mode: "cors",
+          redirect: "follow",
+          body: JSON.stringify({ name: name, message: message }),
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          responseMessage.textContent = "Thank you for your message!";
+          document.getElementById("guestName").value = "";
+          document.getElementById("guestMessage").value = "";
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          responseMessage.textContent =
+            "Something went wrong. Check console for details.";
+        });
+    });
+</script>
