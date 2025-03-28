@@ -4,7 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wedding Invitation - LinkedIn Style</title>
+
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://kit.fontawesome.com/3055f91a99.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="styles.css" />
+    <!-- <link rel="stylesheet" href="new.css" /> -->
   </head>
   <body>
     <div class="container">
@@ -36,6 +45,43 @@
         <button class="button" id="rsvpButton">Accept</button>
         <button class="outline-button" id="sayCongrats">Say Congrats</button>
       </div>
+      <div
+        id="messageModal"
+        class="ui modal"
+        style="
+          height: 0;
+          overflow: hidden;
+          transition: all;
+          transition-duration: 1s;
+        "
+      >
+        <i class="close icon"></i>
+        <div class="content">
+          <div class="p-2 ">
+            <input
+              type="text"
+              id="guestName"
+              placeholder="Your Name"
+              class="w-40"
+              required
+            />
+            <textarea
+              id="guestMessage"
+              class="ui input w-80"
+              placeholder="Your Message"
+              required
+            ></textarea>
+          </div>
+
+          <button id="modalSubmitMessage" class="ui button">Send</button>
+        </div>
+
+        <p id="responseMessage"></p>
+        <div class="actions">
+          <!-- <button class="ui button" id="modalSubmitMessage">Send</button> -->
+          <button class="ui button" id="modalCloseButton">Cancel</button>
+        </div>
+      </div>
       <div class="people-you-may-know">
         <h3>More people you may know</h3>
         <div class="person">
@@ -64,26 +110,59 @@
           window.location.href =
             "https://calendar.app.google/s8HZxK6FWjHnq3ZE6";
         });
+
       document
         .getElementById("sayCongrats")
         .addEventListener("click", function () {
-          alert("Profile details coming soon!");
+          $(".ui.modal").css({ height: "auto" });
         });
     </script>
   </body>
 </html>
 
-<div class="message-container">
-  <h3>Leave a Message</h3>
-  <input type="text" id="guestName" placeholder="Your Name" required />
-  <textarea id="guestMessage" placeholder="Your Message" required></textarea>
-  <button id="submitMessage">Send</button>
-  <p id="responseMessage"></p>
-</div>
+<div id="comment"></div>
+
+<script src="semantic/dist/semantic.min.js"></script>
 <script>
+  const URL =
+    "https://script.google.com/macros/s/AKfycbx4nIvmHoPreK2A_PyvDJeSyGBfOI7SHVHBOSE0ekmKmtdv5xv4q4AFzSrTxarHtJHP/exec";
+  const getLatestDocument = () => {
+    fetch(URL, {
+      method: "GET",
+    })
+      .then(async (res) => {
+        console.log("Response received:", res);
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        const responseJson = await res.json();
+        const message = responseJson.message;
+        const data = message.splice(1);
+        console.log(data);
+        const commentBody = document.getElementById("comment");
+        data.forEach((row) => {
+          const existingRow = document.getElementById(row[0]);
+          if (existingRow) return;
+          const tr = document.createElement("div");
+          tr.id = row[0];
+          row.forEach((cell) => {
+            const td = document.createElement("div");
+            td.textContent = cell;
+            tr.appendChild(td);
+          });
+          commentBody.appendChild(tr);
+        });
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        responseMessage.textContent = "Something went wrong. Check console.";
+      });
+  };
+  getLatestDocument();
   document
-    .getElementById("submitMessage")
+    .getElementById("modalSubmitMessage")
     .addEventListener("click", function () {
+      getLatestDocument();
       const name = document.getElementById("guestName").value;
       const message = document.getElementById("guestMessage").value;
       const responseMessage = document.getElementById("responseMessage");
@@ -95,48 +174,20 @@
 
       console.log("Attempting to send fetch request...");
 
-      //   fetch(
-      //     "https://script.google.com/macros/s/AKfycbwruEelo4X-Io9JL-qtktTtA_e48-wBEJwr7YdqPXlaLVIMmV2arh3jKiVPMnQNrQFf/exec",
-      //     {
-      //       method: "POST",
-      //       mode: "cors",
-      //       headers: { "Content-Type": "application/json" },
-      //       body: JSON.stringify({ name: name, message: message }),
-      //     }
-      //   )
-      //     .then((res) => {
-      //       console.log("Response received:", res);
-      //       if (!res.ok) {
-      //         throw new Error(`HTTP error! Status: ${res.status}`);
-      //       }
-      //       return res.json();
-      //     })
-      //     .then((data) => {
-      //       console.log("Success:", data);
-      //       responseMessage.textContent = "Thank you for your message!";
-      //       document.getElementById("guestName").value = "";
-      //       document.getElementById("guestMessage").value = "";
-      //     })
-      //     .catch((error) => {
-      //       console.error("Fetch error:", error);
-      //       responseMessage.textContent = "Something went wrong. Check console.";
-      //     });
-
-      fetch(
-        "https://script.google.com/macros/s/AKfycbx4nIvmHoPreK2A_PyvDJeSyGBfOI7SHVHBOSE0ekmKmtdv5xv4q4AFzSrTxarHtJHP/exec",
-        {
-          method: "POST",
-          mode: "cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: name, message: message }),
-        }
-      )
+      fetch(URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ name: name, message: message }),
+      })
         .then((res) => {
           console.log("Response received:", res);
-          if (!res.ok) {
+          if (res.status > 200) {
             throw new Error(`HTTP error! Status: ${res.status}`);
           }
-          return res.json();
         })
         .then((data) => {
           console.log("Success:", data);
