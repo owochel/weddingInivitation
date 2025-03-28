@@ -126,9 +126,9 @@
         "https://script.google.com/macros/s/AKfycbx4nIvmHoPreK2A_PyvDJeSyGBfOI7SHVHBOSE0ekmKmtdv5xv4q4AFzSrTxarHtJHP/exec",
         {
           method: "POST",
-          mode: "cors",
+          mode: "no-cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: "Guest", message: "Congratulations!" }),
+          body: JSON.stringify({ name: name, message: message }),
         }
       )
         .then((res) => {
