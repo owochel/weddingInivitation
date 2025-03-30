@@ -10,10 +10,8 @@
       integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
       crossorigin="anonymous"
     ></script>
-    <script src="https://kit.fontawesome.com/3055f91a99.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="styles.css" />
-    <!-- <link rel="stylesheet" href="new.css" /> -->
   </head>
   <body>
     <div class="container">
@@ -33,12 +31,15 @@
         <img class="linkedin-logo" src="logo.png" alt="logo" />
       </div>
       <p>You are invited to witness</p>
-      <a href="https://www.linkedin.com/in/shuang-cai/">
-        <img src="shuang.jpeg" alt="Couple Photo" class="profile-pic" />
-      </a>
-      <a href=" https://www.linkedin.com/in/jeffyanchen/">
-        <img src="yan.jpeg" alt="Couple Photo" class="profile-pic" />
-      </a>
+      <div class="flex justify-center gap-8">
+        <a href="https://www.linkedin.com/in/shuang-cai/">
+          <img src="shuang.jpeg" alt="Couple Photo" class="profile-pic" />
+        </a>
+
+        <a href=" https://www.linkedin.com/in/jeffyanchen/">
+          <img src="yan.jpeg" alt="Couple Photo" class="profile-pic" />
+        </a>
+      </div>
       <h2>Shuang Cai & Yan Chen</h2>
       <p>Future Life Partners</p>
       <div class="button-container">
@@ -57,29 +58,36 @@
       >
         <i class="close icon"></i>
         <div class="content">
-          <div class="p-2 ">
+          <div class="p-2 space-y-2">
             <input
               type="text"
               id="guestName"
               placeholder="Your Name"
-              class="w-40"
+              class="w-full bg-slate-200 px-4 border-gray-400 border rounded-full py-2 active:border-gray-500 active:ring-0"
               required
             />
-            <textarea
-              id="guestMessage"
-              class="ui input w-80"
-              placeholder="Your Message"
-              required
-            ></textarea>
+            <div
+              class="w-full resize-none bg-slate-200 border-gray-400 border rounded-[16px] py-2 active:border-gray-500 active:ring-0 h-auto transition-all duration-75"
+            >
+              <textarea
+                id="guestMessage"
+                class="w-full resize-none bg-transparent px-4 py-2"
+                placeholder="Your wishes starts here. You can submit as many wishes as you want. Wishes cannot be deleted once submitted."
+                required
+              ></textarea>
+              <div class="flex">
+                <div class="w-90"></div>
+                <button id="modalSubmitMessage" class="button">Send</button>
+              </div>
+            </div>
+            <p id="responseMessage"></p>
+            <div
+              id="comment-container"
+              class="w-full h-auto mt-6 p-4 bg-gray-100 rounded-lg"
+            >
+              <div id="comment" class="space-y-3"></div>
+            </div>
           </div>
-
-          <button id="modalSubmitMessage" class="ui button">Send</button>
-        </div>
-
-        <p id="responseMessage"></p>
-        <div class="actions">
-          <!-- <button class="ui button" id="modalSubmitMessage">Send</button> -->
-          <button class="ui button" id="modalCloseButton">Cancel</button>
         </div>
       </div>
       <div class="people-you-may-know">
@@ -120,8 +128,6 @@
   </body>
 </html>
 
-<div id="comment"></div>
-
 <script src="semantic/dist/semantic.min.js"></script>
 <script>
   const URL =
@@ -130,6 +136,50 @@
     fetch(URL, {
       method: "GET",
     })
+      //     .then(async (res) => {
+      //       console.log("Response received:", res);
+      //       if (!res.ok) {
+      //         throw new Error(`HTTP error! Status: ${res.status}`);
+      //       }
+      //       const responseJson = await res.json();
+      //       const message = responseJson.message;
+      //       const data = message.splice(1);
+      //       console.log(data);
+      //       const commentBody = document.getElementById("comment");
+      //       data.forEach((row) => {
+      //         const existingRow = document.getElementById(row[0]);
+      //         if (existingRow) return;
+      //         const tr = document.createElement("div");
+      //         tr.id = row[0];
+      //         row.forEach((cell) => {
+      //           const td = document.createElement("div");
+      //           td.textContent = cell;
+      //           tr.appendChild(td);
+      //         });
+      //         commentBody.appendChild(tr);
+      //       });
+      //     })
+      //     .catch((error) => {
+      //       console.error("Fetch error:", error);
+      //       responseMessage.textContent = "Something went wrong. Check console.";
+      //     });
+      // };
+      // document.addEventListener("DOMContentLoaded", function () {
+      //   const messageInput = document.getElementById("guestMessage");
+      //   const submitButton = document.getElementById("modalSubmitMessage");
+
+      //   // Initially hide the button
+      //   submitButton.style.display = "none";
+
+      //   messageInput.addEventListener("input", function () {
+      //     if (messageInput.value.trim() !== "") {
+      //       submitButton.style.display = "block"; // Show the button
+      //     } else {
+      //       submitButton.style.display = "none"; // Hide the button
+      //     }
+      //   });
+      // });
+      // getLatestDocument();
       .then(async (res) => {
         console.log("Response received:", res);
         if (!res.ok) {
@@ -137,32 +187,101 @@
         }
         const responseJson = await res.json();
         const message = responseJson.message;
-        const data = message.splice(1);
+        let data = message.splice(1); // Extract the comments
         console.log(data);
+
         const commentBody = document.getElementById("comment");
+        commentBody.innerHTML = ""; // Clear previous comments
+
+        if (data.length === 0) {
+          // ✅ Show placeholder message & maintain container height
+          commentBody.innerHTML = `
+            <p class="text-gray-500 italic text-center py-4 w-full">
+                Be the first to say your wishes.
+            </p>`;
+          return;
+        }
+
+        // ✅ Reverse the order so newest comments appear first
+        data.reverse();
+
         data.forEach((row) => {
-          const existingRow = document.getElementById(row[0]);
-          if (existingRow) return;
-          const tr = document.createElement("div");
-          tr.id = row[0];
-          row.forEach((cell) => {
-            const td = document.createElement("div");
-            td.textContent = cell;
-            tr.appendChild(td);
+          const timestamp = new Date(row[0]).toLocaleString("en-US", {
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
           });
-          commentBody.appendChild(tr);
+
+          const userName = row[1];
+          const userMessage = row[2];
+
+          // Create main comment container
+          const commentDiv = document.createElement("div");
+          commentDiv.classList.add("comment");
+
+          // Name and timestamp in the same line
+          const nameTimeContainer = document.createElement("div");
+          nameTimeContainer.classList.add("header");
+
+          const nameElement = document.createElement("span");
+          nameElement.textContent = userName;
+
+          const timeElement = document.createElement("span");
+          timeElement.classList.add("timestamp");
+          timeElement.textContent = timestamp;
+
+          nameTimeContainer.appendChild(nameElement);
+          nameTimeContainer.appendChild(timeElement);
+
+          // Message
+          const messageElement = document.createElement("p");
+          messageElement.classList.add("message");
+          messageElement.textContent = userMessage;
+
+          // Append elements
+          commentDiv.appendChild(nameTimeContainer);
+          commentDiv.appendChild(messageElement);
+
+          // Append main comment to container
+          commentBody.appendChild(commentDiv);
         });
       })
       .catch((error) => {
         console.error("Fetch error:", error);
-        responseMessage.textContent = "Something went wrong. Check console.";
+        document.getElementById("responseMessage").textContent =
+          "Something went wrong. Check console.";
       });
   };
+
+  // Fetch and display comments when the page loads
   getLatestDocument();
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const messageInput = document.getElementById("guestMessage");
+    const submitButton = document.getElementById("modalSubmitMessage");
+
+    // Initially hide the button
+    submitButton.style.display = "none";
+
+    messageInput.addEventListener("input", function () {
+      if (messageInput.value.trim() !== "") {
+        submitButton.style.display = "block"; // Show the button
+      } else {
+        submitButton.style.display = "none"; // Hide the button
+      }
+    });
+  });
+
   document
     .getElementById("modalSubmitMessage")
     .addEventListener("click", function () {
       getLatestDocument();
+      const nameInput = document.getElementById("guestName");
+      const messageInput = document.getElementById("guestMessage");
       const name = document.getElementById("guestName").value;
       const message = document.getElementById("guestMessage").value;
       const responseMessage = document.getElementById("responseMessage");
@@ -193,6 +312,10 @@
           console.log("Success:", data);
           document.getElementById("responseMessage").textContent =
             "Thank you for your message!";
+          getLatestDocument();
+          nameInput.value = "";
+          messageInput.value = "";
+          document.getElementById("modalSubmitMessage").style.display = "none";
         })
         .catch((error) => {
           console.error("Fetch error:", error);
@@ -202,4 +325,20 @@
 
       console.log("Fetch request sent.");
     });
+
+  const updateCommentContainerHeight = () => {
+    const commentContainer = document.getElementById("comment-container");
+    const totalComments = document.querySelectorAll(".comment").length;
+
+    // Calculate height dynamically based on the number of comments
+    let newHeight = 50 + totalComments * 50; // Each comment ~50px
+    let maxHeight = window.innerHeight - 300; // Prevents exceeding screen
+
+    // Apply height limits
+    commentContainer.style.height = `${Math.min(newHeight, maxHeight)}px`;
+  };
+
+  // Run on page load and update when new comments are added
+  document.addEventListener("DOMContentLoaded", updateCommentContainerHeight);
+  setInterval(updateCommentContainerHeight, 500); // Update periodically
 </script>
