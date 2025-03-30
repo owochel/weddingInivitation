@@ -40,6 +40,7 @@ body {
 
 .button-container {
     margin-top: 15px;
+    width: full;
 }
 
 .button {
@@ -51,9 +52,11 @@ body {
     cursor: pointer;
     font-size: 14px;
     margin: 5px;
+    width: full;
 }
 
 #comment-container {
+
     max-height: 400px;
     /* Prevents it from taking too much space */
     overflow-y: auto;
@@ -119,7 +122,6 @@ textarea {
     max-width: 600px;
     background: #f3f4f6;
     padding: 16px;
-    border-radius: 8px;
     min-height: 100px;
     /* Ensures a minimum height */
     display: flex;
@@ -168,7 +170,7 @@ textarea {
         justify-content: center;
         align-items: flex-start;
         height: auto;
-        padding: 10px;
+        padding: 3px;
         /* Prevents content from hitting screen edges */
     }
 
@@ -182,6 +184,8 @@ textarea {
         margin-top: 10px;
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        /* margin-left: auto; */
+        margin: auto;
     }
 
     .linkedin-logo {
@@ -195,6 +199,7 @@ textarea {
     }
 
     .button-container {
+        width: 100%;
         display: flex;
         flex-direction: column;
         /* Stack buttons on mobile */
@@ -204,10 +209,11 @@ textarea {
     .button,
     .outline-button {
         width: 100%;
-        max-width: 250px;
+        /* max-width: 250px; */
         padding: 12px;
         font-size: 14px;
         margin: 5px 0;
+        min-width: 10%;
         /* Add space between buttons */
     }
 
@@ -215,13 +221,13 @@ textarea {
         max-width: 100%;
         width: 100%;
         padding: 12px;
-        border-radius: 10px;
         min-height: 150px;
         margin-top: 20px;
         /* Add space above comments */
     }
 
     .comment {
+        max-width: 250px;
         width: 100%;
         padding: 10px;
         border-radius: 8px;
@@ -234,6 +240,7 @@ textarea {
     }
 
     .comment .message {
+        max-width: 250px;
         word-wrap: break-word;
         white-space: pre-wrap;
         /* Preserves line breaks */
@@ -246,11 +253,13 @@ textarea {
     .person {
         flex-direction: row;
         align-items: center;
+        width: 100%;
     }
 
     .view-button {
         font-size: 12px;
         padding: 5px 10px;
+        min-width: 90px
     }
 
 }

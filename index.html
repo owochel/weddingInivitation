@@ -54,47 +54,44 @@
           overflow: hidden;
           transition: all;
           transition-duration: 1s;
+          margin: 0%;
+          padding: 0%;
         "
       >
-        <i class="close icon"></i>
-        <div class="content">
-          <div class="p-2 space-y-2">
-            <input
-              type="text"
-              id="guestName"
-              placeholder="Your Name"
-              class="w-full bg-slate-200 px-4 border-gray-400 border rounded-full py-2 active:border-gray-500 active:ring-0"
+        <div class="space-y-2 mt-2">
+          <input
+            type="text"
+            id="guestName"
+            placeholder="Your Name"
+            class="w-full bg-slate-200 px-4 border-gray-400 border rounded-full py-2 active:border-gray-500 active:ring-0"
+            required
+          />
+          <div
+            class="w-full resize-none bg-slate-200 border-gray-400 border rounded-[20px] py-2 active:border-gray-500 active:ring-0 h-auto transition-all duration-75"
+          >
+            <textarea
+              id="guestMessage"
+              class="w-full resize-none bg-transparent px-4 py-2"
+              placeholder="Your wishes start here. Submitted wishes will be displayed publicly, and you can submit as many wishes as you want. Wishes cannot be deleted once submitted."
               required
-            />
-            <div
-              class="w-full resize-none bg-slate-200 border-gray-400 border rounded-[16px] py-2 active:border-gray-500 active:ring-0 h-auto transition-all duration-75"
-            >
-              <textarea
-                id="guestMessage"
-                class="w-full resize-none bg-transparent px-4 py-2"
-                placeholder="Your wishes starts here. Submitted wishes will be displayed publicly, and you can submit as many wishes as you want. Wishes cannot be deleted once submitted."
-                required
-              ></textarea>
-              <div class="flex">
-                <div class="w-90"></div>
-                <button id="modalSubmitMessage" class="button">Send</button>
-              </div>
-            </div>
-            <p id="responseMessage"></p>
-            <div
-              id="comment-container"
-              class="w-full h-auto mt-6 p-4 bg-gray-100 rounded-lg"
-            >
-              <div id="comment" class="space-y-3"></div>
+            ></textarea>
+            <div class="flex">
+              <div class="w-90"></div>
+              <button id="modalSubmitMessage" class="button">Send</button>
             </div>
           </div>
+          <p id="responseMessage"></p>
+          <div id="comment-container" class="w-full h-auto mt-6 p-4 border-none
+          bg-gray-100 border rounded-[20px]">
+          <div id="comment" class="space-y-3"></div>
         </div>
       </div>
-      <div class="people-you-may-know">
-        <h3 class="mb-3">More people you may know</h3>
+    </div>
+    <div class="people-you-may-know">
+      <h3 class="mb-3">More people you may know</h3>
 
-        <div class="person">
-          <div id="guestList"></div>
+      <div class="person">
+        <div id="guestList" class="w-full"></div>
       </div>
     </div>
 
@@ -161,9 +158,8 @@
 
           const userName = row[1];
           let userMessage = row[2];
-             // ✅ Convert new lines (`\n`) into `<br>` to preserve formatting
-        userMessage = userMessage.replace(/\n/g, "<br>");
-
+          // ✅ Convert new lines (`\n`) into `<br>` to preserve formatting
+          userMessage = userMessage.replace(/\n/g, "<br>");
 
           // Create main comment container
           const commentDiv = document.createElement("div");
@@ -289,79 +285,92 @@
   setInterval(updateCommentContainerHeight, 500); // Update periodically
 
   const loadGuests = async () => {
-    try{
-    const response = await fetch("guestslist.json");
-    let guests = await response.json();
-    guests = guests.sort(() => Math.random() - 0.5);
-    
-    const guestList = document.getElementById("guestList");
-    guestList.innerHTML = ""; // Clear previous content
+    try {
+      const response = await fetch("guestslist.json");
+      let guests = await response.json();
+      guests = guests.sort(() => Math.random() - 0.5);
 
-    const maxGuestsInitially = 3; // ✅ Number of guests to show initially
-    let showAll = false; // ✅ State to track whether all guests are shown
+      const guestList = document.getElementById("guestList");
+      guestList.innerHTML = ""; // Clear previous content
 
-    const renderGuests = () => {
-      guestList.innerHTML = ""; // Clear and re-render
+      const maxGuestsInitially = 3; // ✅ Number of guests to show initially
+      let showAll = false; // ✅ State to track whether all guests are shown
 
-      const guestsToDisplay = showAll ? guests : guests.slice(0, maxGuestsInitially);
+      const renderGuests = () => {
+        guestList.innerHTML = ""; // Clear and re-render
 
-      guestsToDisplay.forEach((guest) => {
-        const guestDiv = document.createElement("div");
-        guestDiv.classList.add("person", "flex", "items-center", "gap-4", "mb-3");
+        const guestsToDisplay = showAll
+          ? guests
+          : guests.slice(0, maxGuestsInitially);
 
-        // Image
-        const img = document.createElement("img");
-        img.src = guest.image;
-        img.alt = guest.name;
-        img.classList.add("w-10", "h-10", "rounded-full");
+        guestsToDisplay.forEach((guest) => {
+          const guestDiv = document.createElement("div");
+          guestDiv.classList.add(
+            "person",
+            "flex",
+            "items-center",
+            "gap-4",
+            "mb-3",
+            "w-full"
+          );
 
-        // Guest Info
-        const guestInfo = document.createElement("div");
-        const name = document.createElement("p");
-        name.innerHTML = `<strong>${guest.name}</strong>`;
+          // Image
+          const img = document.createElement("img");
+          img.src = guest.image;
+          img.alt = guest.name;
+          img.classList.add("w-10", "h-10", "rounded-full");
 
-        const role = document.createElement("p");
-        role.textContent = guest.role;
-        role.classList.add("text-gray-500", "text-sm");
+          // Guest Info
+          const guestInfo = document.createElement("div");
+          const name = document.createElement("p");
+          name.innerHTML = `<strong>${guest.name}</strong>`;
 
-        guestInfo.appendChild(name);
-        guestInfo.appendChild(role);
+          const role = document.createElement("p");
+          role.textContent = guest.role;
+          role.classList.add("text-gray-500", "text-sm");
 
-        // Profile Button
-        const profileButton = document.createElement("a");
-        profileButton.href = guest.profile_link;
-        profileButton.classList.add("view-button");
-        profileButton.textContent = "View Profile";
+          guestInfo.appendChild(name);
+          guestInfo.appendChild(role);
 
-        // Append elements
-        guestDiv.appendChild(img);
-        guestDiv.appendChild(guestInfo);
-        guestDiv.appendChild(profileButton);
-        guestList.appendChild(guestDiv);
-      });
+          // Profile Button
+          const profileButton = document.createElement("a");
+          profileButton.href = guest.profile_link;
+          profileButton.classList.add("view-button");
+          profileButton.textContent = "View Profile";
 
-      // Add "Show More" button if there are more guests
-      if (guests.length > maxGuestsInitially) {
-        const showMoreButton = document.createElement("button");
-        showMoreButton.textContent = showAll ? "Show Less" : "Show More";
-        showMoreButton.classList.add("mt-3", "text-blue-500", "hover:underline", "text-sm");
-        showMoreButton.addEventListener("click", () => {
-          showAll = !showAll;
-          renderGuests(); // Re-render with updated state
+          // Append elements
+          guestDiv.appendChild(img);
+          guestDiv.appendChild(guestInfo);
+          guestDiv.appendChild(profileButton);
+          guestList.appendChild(guestDiv);
         });
 
-        guestList.appendChild(showMoreButton);
-      }
-    };
+        // Add "Show More" button if there are more guests
+        if (guests.length > maxGuestsInitially) {
+          const showMoreButton = document.createElement("button");
+          showMoreButton.textContent = showAll ? "Show Less" : "Show More";
+          showMoreButton.classList.add(
+            "mt-3",
+            "text-blue-500",
+            "hover:underline",
+            "text-sm"
+          );
+          showMoreButton.addEventListener("click", () => {
+            showAll = !showAll;
+            renderGuests(); // Re-render with updated state
+          });
 
-    // Initial render
-    renderGuests();
+          guestList.appendChild(showMoreButton);
+        }
+      };
 
-  } catch (error) {
-    console.error("Error loading guests:", error);
-  }
-};
+      // Initial render
+      renderGuests();
+    } catch (error) {
+      console.error("Error loading guests:", error);
+    }
+  };
 
-// Load guests when the page loads
-document.addEventListener("DOMContentLoaded", loadGuests);
+  // Load guests when the page loads
+  document.addEventListener("DOMContentLoaded", loadGuests);
 </script>
