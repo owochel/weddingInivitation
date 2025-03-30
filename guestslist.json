@@ -31,7 +31,7 @@
   },
   {
     "name": "Julia Guo",
-    "role": "License Witness",
+    "role": "License Witness (Remote)",
     "profile_link": "https://www.linkedin.com/in/itsjuliaguo/",
     "image": "guests/junyi.jpeg"
   }
@@ -47,5 +47,17 @@
     "role": "Emotional Supporter",
     "profile_link": "https://www.linkedin.com/in/ruichao-jiang-330a471a2/",
     "image": "guests/Ruichao.jpeg"
+  },
+  {
+    "name": "Yuguang Zhang",
+    "role": "Florist",
+    "profile_link": "https://www.linkedin.com/in/yuguang-zhang/",
+    "image": "guests/yg.jpeg"
+  },
+  {
+    "name": "Yichun Lan",
+    "role": "Barista",
+    "profile_link": "https://www.linkedin.com/in/yichun-lan/",
+    "image": "guests/lan.jpeg"
   }
   ]
