@@ -72,7 +72,7 @@
               <textarea
                 id="guestMessage"
                 class="w-full resize-none bg-transparent px-4 py-2"
-                placeholder="Your wishes starts here. Your wishes will be displayed publicly, and you can submit as many wishes as you want. Wishes cannot be deleted once submitted."
+                placeholder="Your wishes starts here. Submitted wishes will be displayed publicly, and you can submit as many wishes as you want. Wishes cannot be deleted once submitted."
                 required
               ></textarea>
               <div class="flex">
@@ -92,22 +92,9 @@
       </div>
       <div class="people-you-may-know">
         <h3>More people you may know</h3>
+
         <div class="person">
-          <img src="guest1.jpg" alt="Guest 1" />
-          <div>
-            <p><strong>Melika Panbehchi</strong></p>
-            <p>Bridesmaid</p>
-          </div>
-          <button class="view-button">View Profile</button>
-        </div>
-        <div class="person">
-          <img src="guest2.jpg" alt="Guest 2" />
-          <div>
-            <p><strong>Baiyuan Xing</strong></p>
-            <p>Groomsman</p>
-          </div>
-          <button class="view-button">View Profile</button>
-        </div>
+          <div id="guestList"></div>
       </div>
     </div>
 
@@ -136,50 +123,6 @@
     fetch(URL, {
       method: "GET",
     })
-      //     .then(async (res) => {
-      //       console.log("Response received:", res);
-      //       if (!res.ok) {
-      //         throw new Error(`HTTP error! Status: ${res.status}`);
-      //       }
-      //       const responseJson = await res.json();
-      //       const message = responseJson.message;
-      //       const data = message.splice(1);
-      //       console.log(data);
-      //       const commentBody = document.getElementById("comment");
-      //       data.forEach((row) => {
-      //         const existingRow = document.getElementById(row[0]);
-      //         if (existingRow) return;
-      //         const tr = document.createElement("div");
-      //         tr.id = row[0];
-      //         row.forEach((cell) => {
-      //           const td = document.createElement("div");
-      //           td.textContent = cell;
-      //           tr.appendChild(td);
-      //         });
-      //         commentBody.appendChild(tr);
-      //       });
-      //     })
-      //     .catch((error) => {
-      //       console.error("Fetch error:", error);
-      //       responseMessage.textContent = "Something went wrong. Check console.";
-      //     });
-      // };
-      // document.addEventListener("DOMContentLoaded", function () {
-      //   const messageInput = document.getElementById("guestMessage");
-      //   const submitButton = document.getElementById("modalSubmitMessage");
-
-      //   // Initially hide the button
-      //   submitButton.style.display = "none";
-
-      //   messageInput.addEventListener("input", function () {
-      //     if (messageInput.value.trim() !== "") {
-      //       submitButton.style.display = "block"; // Show the button
-      //     } else {
-      //       submitButton.style.display = "none"; // Hide the button
-      //     }
-      //   });
-      // });
-      // getLatestDocument();
       .then(async (res) => {
         console.log("Response received:", res);
         if (!res.ok) {
@@ -217,7 +160,10 @@
           });
 
           const userName = row[1];
-          const userMessage = row[2];
+          let userMessage = row[2];
+             // ✅ Convert new lines (`\n`) into `<br>` to preserve formatting
+        userMessage = userMessage.replace(/\n/g, "<br>");
+
 
           // Create main comment container
           const commentDiv = document.createElement("div");
@@ -237,10 +183,10 @@
           nameTimeContainer.appendChild(nameElement);
           nameTimeContainer.appendChild(timeElement);
 
-          // Message
+          // ✅ Convert new lines (`\n`) into `<br>` and use `innerHTML` instead of `textContent`
           const messageElement = document.createElement("p");
           messageElement.classList.add("message");
-          messageElement.textContent = userMessage;
+          messageElement.innerHTML = userMessage.replace(/\n/g, "<br>"); // ✅ Corrected
 
           // Append elements
           commentDiv.appendChild(nameTimeContainer);
@@ -341,4 +287,81 @@
   // Run on page load and update when new comments are added
   document.addEventListener("DOMContentLoaded", updateCommentContainerHeight);
   setInterval(updateCommentContainerHeight, 500); // Update periodically
+
+  const loadGuests = async () => {
+    try{
+    const response = await fetch("guestslist.json");
+    let guests = await response.json();
+    guests = guests.sort(() => Math.random() - 0.5);
+    
+    const guestList = document.getElementById("guestList");
+    guestList.innerHTML = ""; // Clear previous content
+
+    const maxGuestsInitially = 3; // ✅ Number of guests to show initially
+    let showAll = false; // ✅ State to track whether all guests are shown
+
+    const renderGuests = () => {
+      guestList.innerHTML = ""; // Clear and re-render
+
+      const guestsToDisplay = showAll ? guests : guests.slice(0, maxGuestsInitially);
+
+      guestsToDisplay.forEach((guest) => {
+        const guestDiv = document.createElement("div");
+        guestDiv.classList.add("person", "flex", "items-center", "gap-4", "mb-3");
+
+        // Image
+        const img = document.createElement("img");
+        img.src = guest.image;
+        img.alt = guest.name;
+        img.classList.add("w-10", "h-10", "rounded-full");
+
+        // Guest Info
+        const guestInfo = document.createElement("div");
+        const name = document.createElement("p");
+        name.innerHTML = `<strong>${guest.name}</strong>`;
+
+        const role = document.createElement("p");
+        role.textContent = guest.role;
+        role.classList.add("text-gray-500", "text-sm");
+
+        guestInfo.appendChild(name);
+        guestInfo.appendChild(role);
+
+        // Profile Button
+        const profileButton = document.createElement("a");
+        profileButton.href = guest.profile_link;
+        profileButton.classList.add("view-button");
+        profileButton.textContent = "View Profile";
+
+        // Append elements
+        guestDiv.appendChild(img);
+        guestDiv.appendChild(guestInfo);
+        guestDiv.appendChild(profileButton);
+        guestList.appendChild(guestDiv);
+      });
+
+      // Add "Show More" button if there are more guests
+      if (guests.length > maxGuestsInitially) {
+        const showMoreButton = document.createElement("button");
+        showMoreButton.textContent = showAll ? "Show Less" : "Show More";
+        showMoreButton.classList.add("mt-3", "text-blue-500", "hover:underline", "text-sm");
+        showMoreButton.addEventListener("click", () => {
+          showAll = !showAll;
+          renderGuests(); // Re-render with updated state
+        });
+
+        guestList.appendChild(showMoreButton);
+      }
+    };
+
+    // Initial render
+    renderGuests();
+
+  } catch (error) {
+    console.error("Error loading guests:", error);
+  }
+};
+
+// Load guests when the page loads
+document.addEventListener("DOMContentLoaded", loadGuests);
 </script>

@@ -1,0 +1,51 @@
+[
+    {
+      "name": "Lu Lyu",
+      "role": "Web Development Support",
+      "profile_link": "https://www.linkedin.com/in/lu-lyu-66a134191/",
+      "image": "guests/lu.jpeg"
+    },
+    {
+      "name": "Yibin Wang",
+      "role": "Witness",
+      "profile_link": "https://yibinwang.weebly.com/",
+      "image": "guests/yibin.png"
+    },
+    {
+      "name": "Wanyi Guo",
+      "role": "Emotional Supporter (Remote)",
+      "profile_link": "https://www.linkedin.com/in/wanyi-guo-093209218/",
+      "image": "guests/wanyi.jpeg"
+    },
+    {
+      "name": "Tong Wu",
+      "role": "Florist",
+      "profile_link": "https://www.linkedin.com/in/tongwumedia/",
+      "image": "guests/tong.jpeg"
+    },
+    {      
+      "name": "Tuan-Ting Huang",
+    "role": "Photographer",
+    "profile_link": "https://www.linkedin.com/in/tuanhuang/",
+    "image": "guests/tuan.jpeg"
+  },
+  {
+    "name": "Julia Guo",
+    "role": "License Witness",
+    "profile_link": "https://www.linkedin.com/in/itsjuliaguo/",
+    "image": "guests/junyi.jpeg"
+  }
+  ,
+  {
+    "name": "Yifan Gu",
+    "role": "Bridal Stylist",
+    "profile_link": "https://www.linkedin.com/in/yifangu1617/",
+    "image": "guests/yifan.jpeg"
+  },
+  {
+    "name": "Ruichao Jiang",
+    "role": "Emotional Supporter",
+    "profile_link": "https://www.linkedin.com/in/ruichao-jiang-330a471a2/",
+    "image": "guests/Ruichao.jpeg"
+  }
+  ]
