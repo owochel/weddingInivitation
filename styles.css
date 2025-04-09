@@ -137,6 +137,13 @@ textarea {
     /* Allows scrolling when there are many comments */
 }
 
+.comment {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
 .comment:last-child {
     border-bottom: none;
 }
@@ -161,6 +168,27 @@ textarea {
     color: #222;
     text-align: left;
     width: 100%;
+}
+
+
+.header .name {
+    font-weight: bold;
+    white-space: nowrap;
+    /* Prevent wrapping */
+    overflow: hidden;
+    /* Hide overflow text */
+    text-overflow: ellipsis;
+    /* Show ellipsis for overflowed text */
+    max-width: 70%;
+    /* Adjust this value as needed */
+}
+
+.header .timestamp {
+    color: #888;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    /* Don't shrink timestamp */
 }
 
 /* General Mobile Improvements */
@@ -227,23 +255,44 @@ textarea {
     }
 
     .comment {
-        max-width: 250px;
-        width: 100%;
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
     }
 
     .header {
-        flex-direction: column;
-        /* Stack name and timestamp */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: nowrap;
     }
 
-    .comment .message {
-        max-width: 250px;
-        word-wrap: break-word;
-        white-space: pre-wrap;
-        /* Preserves line breaks */
+    .header .name {
+        font-weight: bold;
+        white-space: nowrap;
+        /* Prevent wrapping */
+        overflow: hidden;
+        /* Hide overflow text */
+        text-overflow: ellipsis;
+        /* Show ellipsis for overflowed text */
+        max-width: 70%;
+        /* Adjust this value as needed */
+    }
+
+    .header .timestamp {
+        color: #888;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+        /* Don't shrink timestamp */
+    }
+
+    .message {
+        margin-top: 5px;
+        word-break: break-word;
+        /* Ensure long words or URLs don't overflow */
     }
 
     .people-you-may-know {
