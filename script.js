@@ -103,57 +103,46 @@
       }
     });
   });
-
-  document
-    .getElementById("modalSubmitMessage")
-    .addEventListener("click", function () {
-      getLatestDocument();
-      const nameInput = document.getElementById("guestName");
-      const messageInput = document.getElementById("guestMessage");
-      const name = document.getElementById("guestName").value;
-      const message = document.getElementById("guestMessage").value;
-      const responseMessage = document.getElementById("responseMessage");
-
-      if (name === "" || message === "") {
-        responseMessage.textContent = "Please fill in both fields.";
-        return;
-      }
-
-      console.log("Attempting to send fetch request...");
-
-      fetch(URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({ name: name, message: message }),
+  document.getElementById("modalSubmitMessage").addEventListener("click", function () {
+    const submitButton = document.getElementById("modalSubmitMessage");
+    submitButton.disabled = true; // Disable the button immediately
+  
+    const nameInput = document.getElementById("guestName");
+    const messageInput = document.getElementById("guestMessage");
+    const responseMessage = document.getElementById("responseMessage");
+  
+    const name = nameInput.value.trim();
+    const message = messageInput.value.trim();
+  
+    if (name === "" || message === "") {
+      responseMessage.textContent = "Please fill in both fields.";
+      submitButton.disabled = false; // re-enable if validation fails
+      return;
+    }
+  
+    fetch(URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, message }),
+    })
+      .then(() => {
+        responseMessage.textContent = "Thank you for your message!";
+        getLatestDocument();
+        nameInput.value = "";
+        messageInput.value = "";
+        submitButton.style.display = "none";
       })
-        .then((res) => {
-          console.log("Response received:", res);
-          if (res.status > 200) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-          }
-        })
-        .then((data) => {
-          console.log("Success:", data);
-          document.getElementById("responseMessage").textContent =
-            "Thank you for your message!";
-          getLatestDocument();
-          nameInput.value = "";
-          messageInput.value = "";
-          document.getElementById("modalSubmitMessage").style.display = "none";
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-          document.getElementById("responseMessage").textContent =
-            "Something went wrong. Check console.";
-        });
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        responseMessage.textContent = "Something went wrong. Check console.";
+      })
+      .finally(() => {
+        setTimeout(() => submitButton.disabled = false, 2000); // re-enable after 2s
+      });
+  });
 
-      console.log("Fetch request sent.");
-    });
-
+  
   const updateCommentContainerHeight = () => {
     const commentContainer = document.getElementById("comment-container");
     const totalComments = document.querySelectorAll(".comment").length;
