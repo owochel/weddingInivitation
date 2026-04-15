@@ -253,7 +253,8 @@
   .getElementById("rsvpButton")
   .addEventListener("click", function () {
     window.location.href =
-      "https://calendar.app.google/s8HZxK6FWjHnq3ZE6";
+      // "https://calendar.app.google/s8HZxK6FWjHnq3ZE6";
+      "https://calendar.google.com/calendar/event?action=TEMPLATE&tmeid=NWxzZ2ZrZGVwYWFlcm5rbWltNW9xdm5zMHQgc2h1YW5nY2FpNjRAbQ&tmsrc=shuangcai64%40gmail.com";
   });
 
 document
